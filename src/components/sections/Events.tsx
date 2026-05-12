@@ -35,9 +35,15 @@ export interface EventItem {
 export function Events({
   accent = "var(--orange)",
   events,
+  portfolioHref = "#",
+  hidePortfolioLink = false,
+  hideFilters = false,
 }: {
   accent?: string;
   events: EventItem[];
+  portfolioHref?: string;
+  hidePortfolioLink?: boolean;
+  hideFilters?: boolean;
 }) {
   const [active, setActive] = useState<string>("Tous");
   const [openEv, setOpenEv] = useState<EventItem | null>(null);
@@ -77,37 +83,39 @@ export function Events({
             <span style={{ color: accent }}>esquisse</span> au coup<br />de sifflet final.
           </Reveal>
         </div>
-        <Reveal delay={2}>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 6,
-              maxWidth: 520,
-              justifyContent: "flex-end",
-            }}
-          >
-            {dynamicCats.map((c) => (
-              <button
-                key={c}
-                onClick={() => setActive(c)}
-                className="oswald"
-                style={{
-                  padding: "8px 14px",
-                  fontSize: 12,
-                  letterSpacing: ".08em",
-                  background: active === c ? accent : "transparent",
-                  color: active === c ? "var(--ink)" : "rgba(255,255,255,.7)",
-                  border: `1px solid ${active === c ? accent : "var(--line-strong)"}`,
-                  cursor: "pointer",
-                  transition: "all .2s ease",
-                }}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
-        </Reveal>
+        {!hideFilters && (
+          <Reveal delay={2}>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 6,
+                maxWidth: 520,
+                justifyContent: "flex-end",
+              }}
+            >
+              {dynamicCats.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setActive(c)}
+                  className="oswald"
+                  style={{
+                    padding: "8px 14px",
+                    fontSize: 12,
+                    letterSpacing: ".08em",
+                    background: active === c ? accent : "transparent",
+                    color: active === c ? "var(--ink)" : "rgba(255,255,255,.7)",
+                    border: `1px solid ${active === c ? accent : "var(--line-strong)"}`,
+                    cursor: "pointer",
+                    transition: "all .2s ease",
+                  }}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          </Reveal>
+        )}
       </div>
 
       <Reveal delay={3}>
@@ -172,20 +180,22 @@ export function Events({
           {list.length} événement{list.length > 1 ? "s" : ""} affiché
           {list.length > 1 ? "s" : ""} · {events.length} au catalogue
         </div>
-        <a
-          href="#"
-          className="oswald"
-          style={{
-            color: accent,
-            fontSize: 13,
-            letterSpacing: ".1em",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 10,
-          }}
-        >
-          Voir tout le portfolio <Arrow size={14} />
-        </a>
+        {!hidePortfolioLink && (
+          <a
+            href={portfolioHref}
+            className="oswald"
+            style={{
+              color: accent,
+              fontSize: 13,
+              letterSpacing: ".1em",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            Voir tout le portfolio <Arrow size={14} />
+          </a>
+        )}
       </div>
 
       <EventModal ev={openEv} accent={accent} onClose={() => setOpenEv(null)} />
@@ -315,7 +325,7 @@ function FeaturedEvent({
   );
 }
 
-function EventCard({
+export function EventCard({
   ev,
   accent,
   small,
@@ -450,7 +460,7 @@ function EventCard({
   );
 }
 
-function EventModal({
+export function EventModal({
   ev,
   accent,
   onClose,
@@ -563,6 +573,7 @@ function EventModal({
           </button>
 
           <div
+            className="event-modal-hero"
             style={{
               position: "relative",
               width: "100%",
@@ -672,6 +683,7 @@ function EventModal({
           </div>
 
           <div
+            className="event-modal-body"
             style={{
               padding: "48px 5% 32px",
               display: "grid",
@@ -695,7 +707,7 @@ function EventModal({
                 {ev.description}
               </p>
             </div>
-            <div style={{ borderLeft: "1px solid rgba(255,255,255,.10)", paddingLeft: 32 }}>
+            <div className="event-modal-aside" style={{ borderLeft: "1px solid rgba(255,255,255,.10)", paddingLeft: 32 }}>
               <div className="label" style={{ color: "#a9c2e6", marginBottom: 14 }}>
                 POINTS CLÉS
               </div>
@@ -741,13 +753,15 @@ function EventModal({
           </div>
 
           {gallery.length > 0 && (
-            <div style={{ padding: "0 5% 48px" }}>
+            <div className="event-modal-gallery-wrap" style={{ padding: "0 5% 48px" }}>
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "flex-end",
                   marginBottom: 18,
+                  flexWrap: "wrap",
+                  gap: 8,
                 }}
               >
                 <div className="label" style={{ color: accent }}>
@@ -758,6 +772,7 @@ function EventModal({
                 </div>
               </div>
               <div
+                className="event-modal-gallery"
                 style={{
                   display: "grid",
                   gridTemplateColumns: `repeat(${Math.min(gallery.length, 4)}, 1fr)`,
@@ -779,7 +794,7 @@ function EventModal({
 
           {/* Page builder blocks */}
           {ev.blocks.length > 0 && (
-            <div style={{ padding: "0 5% 48px", display: "flex", flexDirection: "column", gap: 40 }}>
+            <div className="event-modal-blocks" style={{ padding: "0 5% 48px", display: "flex", flexDirection: "column", gap: 40 }}>
               {ev.blocks.map((b, i) => (
                 <EventBlockRenderer key={`${b.type}-${i}`} block={b} accent={accent} />
               ))}
@@ -787,6 +802,7 @@ function EventModal({
           )}
 
           <div
+            className="event-modal-footer"
             style={{
               padding: "28px 5% 36px",
               borderTop: "1px solid rgba(255,255,255,.10)",
@@ -1235,6 +1251,7 @@ function EventBlockRenderer({
           </div>
         )}
         <div
+          className="event-block-stats"
           style={{
             display: "grid",
             gridTemplateColumns: `repeat(${Math.min(items.length, 4)}, 1fr)`,
@@ -1295,6 +1312,7 @@ function EventBlockRenderer({
           </div>
         )}
         <div
+          className="event-block-gallery"
           style={{
             display: "grid",
             gridTemplateColumns: `repeat(${Math.min(valid.length, 3)}, 1fr)`,

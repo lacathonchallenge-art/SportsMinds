@@ -19,6 +19,7 @@ import {
   deleteItem,
   reorderItems,
   reorderSections,
+  seedExpertiseItems,
   toggleSectionVisible,
   updateItem,
   updateSection,
@@ -476,6 +477,7 @@ function SectionEditModal({
           {/* Items repeatable */}
           <ItemsEditor
             sectionId={section.id}
+            sectionKey={section.section_key}
             pageSlug={pageSlug}
             items={items}
             onChange={setItems}
@@ -509,12 +511,14 @@ function SectionEditModal({
 
 function ItemsEditor({
   sectionId,
+  sectionKey,
   pageSlug,
   items,
   onChange,
   onFlashError,
 }: {
   sectionId: string;
+  sectionKey: string;
   pageSlug: string;
   items: SectionItemRow[];
   onChange: (next: SectionItemRow[]) => void;
@@ -565,9 +569,30 @@ function ItemsEditor({
       </div>
 
       {items.length === 0 && !creating ? (
-        <p className="rounded border border-dashed border-black/15 px-4 py-4 text-center text-[12px] text-black/45">
-          Aucun item. Sections concernées : expertises, objectifs, chiffres clés, réalisations…
-        </p>
+        <div className="rounded border border-dashed border-black/15 px-4 py-5 text-center">
+          <p className="text-[12px] text-black/45">
+            Aucun item pour cette section.
+          </p>
+          {sectionKey === "expertises" && (
+            <button
+              type="button"
+              onClick={() => {
+                startTransition(async () => {
+                  const res = await seedExpertiseItems(sectionId, pageSlug);
+                  if (res.ok) router.refresh();
+                  else onFlashError(res.error || "Échec de l'import");
+                });
+              }}
+              disabled={pending}
+              className="mt-3 inline-flex items-center gap-2 rounded-md bg-[#003f7e] px-4 py-2 text-[12px] font-semibold tracking-wide text-white hover:bg-[#002d5c] disabled:opacity-60"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              {pending
+                ? "Import en cours…"
+                : "Importer les 6 expertises par défaut"}
+            </button>
+          )}
+        </div>
       ) : (
         <ul className="space-y-1.5">
           {items.map((it, i) => (
@@ -734,6 +759,29 @@ function ItemEditModal({
             onChange={(v) => setData({ ...data, description: v })}
             textarea
             rows={3}
+          />
+          <Field
+            label="Capacités (une par ligne — pour la section Expertises)"
+            value={
+              Array.isArray(data.content_json?.capabilities)
+                ? (data.content_json.capabilities as string[]).join("\n")
+                : typeof data.content_json?.capabilities === "string"
+                  ? (data.content_json.capabilities as string)
+                  : ""
+            }
+            onChange={(v) => {
+              const arr = v
+                .split(/\r?\n/)
+                .map((s) => s.trim())
+                .filter(Boolean);
+              setData({
+                ...data,
+                content_json: { ...(data.content_json ?? {}), capabilities: arr },
+              });
+            }}
+            textarea
+            rows={4}
+            placeholder={"Plan stratégique\nDirection artistique\nRelations presse"}
           />
           <div className="grid gap-2 sm:grid-cols-2">
             <Field

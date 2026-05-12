@@ -597,6 +597,7 @@ function FounderSection({ cms }: { cms?: SectionCms }) {
     "body",
     "Mohamed Naciri, ancien joueur de football au Havre AC et acteur reconnu dans l'univers du sport et du sponsoring, dirige SPORTS MINDS. Son parcours l'a amené à collaborer avec le Groupe Darmon sur le sponsoring de la FRMF avant de fonder KANA PRODUCTION.",
   );
+  const portrait = pickImage(cms?.media_json, "image", "");
 
   return (
     <Section dark padY={50} style={{ position: "relative", overflow: "hidden" }}>
@@ -624,37 +625,64 @@ function FounderSection({ cms }: { cms?: SectionCms }) {
               overflow: "hidden",
             }}
           >
+            {/* Portrait image (from admin media_json.image) */}
+            {portrait && (
+              <>
+                <div
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    backgroundImage: `url(${portrait})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
+                <div
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background:
+                      "linear-gradient(180deg, rgba(0,0,3,.15) 0%, rgba(0,0,3,0) 35%, rgba(0,0,3,.85) 100%)",
+                  }}
+                />
+              </>
+            )}
+
             {/* Crosshair corners */}
             <Corner pos="tl" />
             <Corner pos="tr" />
             <Corner pos="bl" />
             <Corner pos="br" />
 
-            {/* Big monogram */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                pointerEvents: "none",
-              }}
-            >
+            {/* Big monogram (fallback when no image) */}
+            {!portrait && (
               <div
-                className="display"
                 style={{
-                  fontSize: 180,
-                  letterSpacing: ".02em",
-                  background: `linear-gradient(180deg, rgba(255,255,255,.92) 0%, rgba(255,255,255,.10) 100%)`,
-                  WebkitBackgroundClip: "text",
-                  backgroundClip: "text",
-                  color: "transparent",
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  pointerEvents: "none",
                 }}
               >
-                MN.
+                <div
+                  className="display"
+                  style={{
+                    fontSize: 180,
+                    letterSpacing: ".02em",
+                    background: `linear-gradient(180deg, rgba(255,255,255,.92) 0%, rgba(255,255,255,.10) 100%)`,
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    color: "transparent",
+                  }}
+                >
+                  MN.
+                </div>
               </div>
-            </div>
+            )}
 
             {/* REC tag (atmospheric) */}
             <div

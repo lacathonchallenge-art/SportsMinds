@@ -83,6 +83,31 @@ export function Expertises({
     "body",
     "Six expertises intégrées sous le même toit. Un brief peut commencer en stratégie, traverser la production et finir en activation — sans changer d'interlocuteur.",
   );
+  // CMS items override the hardcoded fallback when present
+  const cmsItems = cms?.items ?? [];
+  const list: Expertise[] =
+    cmsItems.length > 0
+      ? cmsItems.map((it, i) => {
+          const caps = it.content_json?.capabilities;
+          const capabilitiesArr =
+            Array.isArray(caps)
+              ? caps.filter((c) => typeof c === "string") as string[]
+              : typeof caps === "string"
+                ? caps
+                    .split(/\r?\n|,/)
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                : [];
+          return {
+            n: String(i + 1).padStart(2, "0"),
+            title: it.title || "",
+            tag: it.subtitle || "",
+            img: it.media_url || "",
+            desc: it.description || "",
+            capabilities: capabilitiesArr,
+          };
+        })
+      : EXPERTISES;
   return (
     <Section id="expertises" dark padY={50}>
       <div
@@ -133,9 +158,9 @@ export function Expertises({
           border: "1px solid var(--line)",
         }}
       >
-        {EXPERTISES.map((e, i) => (
+        {list.map((e, i) => (
           <ExpCard
-            key={e.n}
+            key={`${e.n}-${e.title}`}
             {...e}
             accent={accent}
             padding={padding}

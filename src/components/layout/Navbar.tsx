@@ -1,17 +1,57 @@
 "use client";
 
-import { Fragment, useEffect, useState, type CSSProperties } from "react";
+import {
+  Fragment,
+  useEffect,
+  useMemo,
+  useState,
+  type CSSProperties,
+} from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Arrow } from "@/components/ui/Atoms";
 
-const ITEMS = [
-  { label: "Accueil", href: "/" },
-  { label: "Qui sommes-nous", href: "/qui-sommes-nous" },
-  { label: "Expertises", href: "/#expertises" },
-  { label: "Événements & productions", href: "/#events" },
-  { label: "Contact", href: "/#contact" },
-] as const;
+type NavItem = {
+  label: string;
+  href: string;
+  /** For active-state detection. Matches pathname if route, or hash on home. */
+  match?: { type: "route"; path: string } | { type: "hash"; anchor: string } | { type: "home" };
+};
+
+const ITEMS: NavItem[] = [
+  { label: "Accueil", href: "/", match: { type: "home" } },
+  {
+    label: "Qui sommes-nous",
+    href: "/qui-sommes-nous",
+    match: { type: "route", path: "/qui-sommes-nous" },
+  },
+  {
+    label: "Expertises",
+    href: "/#expertises",
+    match: { type: "hash", anchor: "expertises" },
+  },
+  {
+    label: "Événements & productions",
+    href: "/evenements-productions",
+    match: { type: "route", path: "/evenements-productions" },
+  },
+  {
+    label: "Contact",
+    href: "/#contact",
+    match: { type: "hash", anchor: "contact" },
+  },
+];
+
+function isActive(item: NavItem, pathname: string): boolean {
+  if (!item.match) return false;
+  if (item.match.type === "home") return pathname === "/";
+  if (item.match.type === "route") return pathname === item.match.path;
+  if (item.match.type === "hash") return false; // hash links don't set active by route
+  return false;
+}
 
 export function Navbar({ accent = "var(--orange)" }: { accent?: string }) {
+  const pathname = usePathname() ?? "/";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -29,72 +69,104 @@ export function Navbar({ accent = "var(--orange)" }: { accent?: string }) {
     };
   }, [open]);
 
-  const wrap: CSSProperties = {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100vw",
-    maxWidth: "100%",
-    zIndex: 50,
-    padding: scrolled ? "12px 40px" : "22px 56px",
-    transition: "all .35s ease",
-    background: scrolled ? "rgba(0,0,3,.78)" : "transparent",
-    backdropFilter: scrolled ? "blur(14px) saturate(160%)" : "none",
-    borderBottom: scrolled ? "1px solid rgba(255,255,255,.08)" : "1px solid transparent",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 24,
-  };
+  // Close overlay on Escape
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  // Close on route change
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  const navStyle: CSSProperties = useMemo(
+    () => ({
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      maxWidth: "100%",
+      zIndex: 50,
+      padding: scrolled ? "10px 40px" : "20px 56px",
+      transition:
+        "padding .35s cubic-bezier(.2,.7,.2,1), background .3s ease",
+      background: scrolled
+        ? "rgba(0,0,3,.82)"
+        : "linear-gradient(180deg, rgba(0,0,3,.30) 0%, rgba(0,0,3,0) 100%)",
+      backdropFilter: scrolled ? "blur(18px) saturate(180%)" : "none",
+      WebkitBackdropFilter: scrolled ? "blur(18px) saturate(180%)" : "none",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: 24,
+    }),
+    [scrolled],
+  );
 
   return (
     <Fragment>
-      <nav style={wrap}>
-        <a
-          href="#home"
+      <nav style={navStyle}>
+        <Link
+          href="/"
           aria-label="Sports Minds — Accueil"
+          className="nav-logo-link"
           style={{ display: "inline-flex", alignItems: "center" }}
         >
           <Logomark />
-        </a>
+        </Link>
 
         {/* Desktop menu */}
         <ul
           className="nav-desktop"
-          style={{ display: "flex", gap: 0, listStyle: "none", margin: 0, padding: 0 }}
+          style={{
+            display: "flex",
+            gap: 4,
+            listStyle: "none",
+            margin: 0,
+            padding: 0,
+            alignItems: "center",
+          }}
         >
-          {ITEMS.map((it) => (
-            <li key={it.label}>
-              <a
-                href={it.href}
-                className="oswald"
-                style={{
-                  fontSize: 12,
-                  fontWeight: 500,
-                  padding: "10px 16px",
-                  color: "rgba(255,255,255,.78)",
-                  transition: "color .2s ease",
-                  display: "inline-block",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--white)")}
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "rgba(255,255,255,.78)")
-                }
-              >
-                {it.label}
-              </a>
-            </li>
-          ))}
+          {ITEMS.map((it, i) => {
+            const active = isActive(it, pathname);
+            const isInternal = it.href.startsWith("/") && !it.href.includes("#");
+            const LinkTag = isInternal ? Link : "a";
+            const idx = String(i + 1).padStart(2, "0");
+            return (
+              <li key={it.label} style={{ position: "relative" }}>
+                <LinkTag
+                  href={it.href}
+                  className={`nav-link oswald ${active ? "nav-link-active" : ""}`}
+                >
+                  <span className="nav-link-idx" aria-hidden>
+                    {idx}
+                  </span>
+                  <span className="nav-link-label">{it.label}</span>
+                </LinkTag>
+              </li>
+            );
+          })}
         </ul>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+          }}
+        >
           <a
-            href="#contact"
+            href="/#contact"
             className="nav-cta"
             style={{
               display: "inline-flex",
               alignItems: "center",
-              gap: 10,
+              gap: 12,
               padding: "12px 18px",
               background: accent,
               color: "var(--ink)",
@@ -103,26 +175,48 @@ export function Navbar({ accent = "var(--orange)" }: { accent?: string }) {
               fontSize: 12,
               letterSpacing: ".1em",
               textTransform: "uppercase",
+              position: "relative",
+              transition:
+                "transform .3s cubic-bezier(.2,.7,.2,1), box-shadow .3s ease, background .25s ease",
             }}
           >
-            Lancer un projet <Arrow size={12} />
+            <span style={{ position: "relative", zIndex: 1 }}>Lancer un projet</span>
+            <span
+              className="nav-cta-arrow"
+              aria-hidden
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                transition: "transform .35s cubic-bezier(.2,.7,.2,1)",
+              }}
+            >
+              <Arrow size={12} />
+            </span>
           </a>
 
           <button
+            type="button"
             aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
             className="nav-burger"
             style={{
               display: "none",
-              width: 44,
-              height: 44,
+              width: 48,
+              height: 48,
               border: "1px solid rgba(255,255,255,.25)",
-              background: "rgba(0,0,3,.55)",
+              background: scrolled ? "rgba(0,0,3,.65)" : "rgba(0,0,3,.45)",
               backdropFilter: "blur(8px)",
               cursor: "pointer",
               padding: 0,
               position: "relative",
+              zIndex: 51,
+              pointerEvents: "auto",
+              touchAction: "manipulation",
+              WebkitTapHighlightColor: "transparent",
+              transition: "background .25s ease, border-color .25s ease",
             }}
           >
             <Bars open={open} />
@@ -155,8 +249,7 @@ export function Navbar({ accent = "var(--orange)" }: { accent?: string }) {
           transform: open ? "translateY(0)" : "translateY(-100%)",
           opacity: open ? 1 : 0,
           pointerEvents: open ? "auto" : "none",
-          transition:
-            "transform .4s cubic-bezier(.2,.7,.2,1), opacity .35s ease",
+          transition: "transform .45s cubic-bezier(.2,.7,.2,1), opacity .35s ease",
           overflowY: "auto",
         }}
       >
@@ -180,7 +273,10 @@ export function Navbar({ accent = "var(--orange)" }: { accent?: string }) {
               animation: "pulse-ring 2s infinite",
             }}
           />
-          <span className="label" style={{ color: "rgba(255,255,255,.85)", fontSize: 10 }}>
+          <span
+            className="label"
+            style={{ color: "rgba(255,255,255,.85)", fontSize: 10 }}
+          >
             SPORT <span style={{ color: accent }}>/</span> MÉDIA{" "}
             <span style={{ color: accent }}>/</span> ÉVÉNEMENTIEL
           </span>
@@ -197,56 +293,82 @@ export function Navbar({ accent = "var(--orange)" }: { accent?: string }) {
             flex: 1,
           }}
         >
-          {ITEMS.map((it, i) => (
-            <li
-              key={it.label}
-              style={{ borderBottom: "1px solid rgba(255,255,255,.10)" }}
-            >
-              <a
-                href={it.href}
-                onClick={() => setOpen(false)}
-                className="oswald"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "18px 4px",
-                  color: "var(--white)",
-                  fontSize: 22,
-                  fontWeight: 600,
-                  letterSpacing: ".04em",
-                  textTransform: "uppercase",
-                  position: "relative",
-                }}
+          {ITEMS.map((it, i) => {
+            const active = isActive(it, pathname);
+            const isInternal = it.href.startsWith("/") && !it.href.includes("#");
+            const LinkTag = isInternal ? Link : "a";
+            return (
+              <li
+                key={it.label}
+                className="nav-overlay-item"
+                style={
+                  {
+                    borderBottom: "1px solid rgba(255,255,255,.10)",
+                    "--idx": i,
+                  } as CSSProperties
+                }
               >
-                <span style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: 28,
-                      height: 28,
-                      background: "#033e7d",
-                      color: "var(--white)",
-                      fontFamily: "'JetBrains Mono',monospace",
-                      fontSize: 10,
-                      letterSpacing: ".05em",
-                    }}
-                  >
-                    0{i + 1}
+                <LinkTag
+                  href={it.href}
+                  onClick={() => setOpen(false)}
+                  className="oswald"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "18px 4px",
+                    color: "var(--white)",
+                    fontSize: 22,
+                    fontWeight: 600,
+                    letterSpacing: ".04em",
+                    textTransform: "uppercase",
+                    position: "relative",
+                  }}
+                >
+                  <span style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: 28,
+                        height: 28,
+                        background: active ? accent : "#033e7d",
+                        color: active ? "var(--ink)" : "var(--white)",
+                        fontFamily: "'JetBrains Mono',monospace",
+                        fontSize: 10,
+                        letterSpacing: ".05em",
+                        transition: "background .25s ease, color .25s ease",
+                      }}
+                    >
+                      0{i + 1}
+                    </span>
+                    <span
+                      style={{
+                        color: active ? accent : "var(--white)",
+                        transition: "color .25s ease",
+                      }}
+                    >
+                      {it.label}
+                    </span>
                   </span>
-                  {it.label}
-                </span>
-                <span style={{ color: accent, display: "inline-flex" }}>
-                  <Arrow size={14} />
-                </span>
-              </a>
-            </li>
-          ))}
+                  <span style={{ color: accent, display: "inline-flex" }}>
+                    <Arrow size={14} />
+                  </span>
+                </LinkTag>
+              </li>
+            );
+          })}
         </ul>
 
-        <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 14 }}>
+        <div
+          style={{
+            marginTop: 24,
+            display: "flex",
+            flexDirection: "column",
+            gap: 14,
+          }}
+        >
           <div
             style={{
               display: "grid",
@@ -257,34 +379,51 @@ export function Navbar({ accent = "var(--orange)" }: { accent?: string }) {
               border: "1px solid rgba(3,62,125,.55)",
             }}
           >
-            <div>
-              <div className="label" style={{ color: accent, fontSize: 9, marginBottom: 6 }}>
+            <div style={{ minWidth: 0 }}>
+              <div
+                className="label"
+                style={{ color: accent, fontSize: 9, marginBottom: 6 }}
+              >
                 EMAIL
               </div>
               <a
-                href="mailto:hello@sportsminds.ma"
+                href="mailto:monaciri@sportsminds.ma"
                 className="oswald"
-                style={{ color: "var(--white)", fontSize: 12, fontWeight: 500 }}
+                style={{
+                  color: "var(--white)",
+                  fontSize: 11.5,
+                  fontWeight: 500,
+                  wordBreak: "break-all",
+                  display: "block",
+                }}
               >
-                hello@sportsminds.ma
+                monaciri@sportsminds.ma
               </a>
             </div>
-            <div>
-              <div className="label" style={{ color: accent, fontSize: 9, marginBottom: 6 }}>
+            <div style={{ minWidth: 0 }}>
+              <div
+                className="label"
+                style={{ color: accent, fontSize: 9, marginBottom: 6 }}
+              >
                 TEL.
               </div>
               <a
-                href="tel:+212522000000"
+                href="tel:+212661173444"
                 className="oswald"
-                style={{ color: "var(--white)", fontSize: 12, fontWeight: 500 }}
+                style={{
+                  color: "var(--white)",
+                  fontSize: 11.5,
+                  fontWeight: 500,
+                  whiteSpace: "nowrap",
+                }}
               >
-                +212 522 00 00 00
+                +212 6 61 17 34 44
               </a>
             </div>
           </div>
 
           <a
-            href="#contact"
+            href="/#contact"
             onClick={() => setOpen(false)}
             style={{
               display: "inline-flex",
@@ -313,20 +452,29 @@ export function Navbar({ accent = "var(--orange)" }: { accent?: string }) {
 function Bars({ open }: { open: boolean }) {
   const bar: CSSProperties = {
     position: "absolute",
-    left: 12,
-    right: 12,
+    left: 14,
+    right: 14,
     height: 2,
     background: "var(--white)",
+    pointerEvents: "none",
     transition: "transform .3s ease, opacity .2s ease, top .3s ease",
   };
   return (
     <Fragment>
       <span
-        style={{ ...bar, top: open ? 21 : 14, transform: open ? "rotate(45deg)" : "none" }}
+        style={{
+          ...bar,
+          top: open ? 23 : 16,
+          transform: open ? "rotate(45deg)" : "none",
+        }}
       />
-      <span style={{ ...bar, top: 21, opacity: open ? 0 : 1 }} />
+      <span style={{ ...bar, top: 23, opacity: open ? 0 : 1 }} />
       <span
-        style={{ ...bar, top: open ? 21 : 28, transform: open ? "rotate(-45deg)" : "none" }}
+        style={{
+          ...bar,
+          top: open ? 23 : 30,
+          transform: open ? "rotate(-45deg)" : "none",
+        }}
       />
     </Fragment>
   );
@@ -338,7 +486,13 @@ function Logomark() {
     <img
       src="/sportsmindslogo.jpeg"
       alt="Sports Minds"
-      style={{ display: "block", height: 56, width: "auto" }}
+      className="nav-logo-img"
+      style={{
+        display: "block",
+        height: 56,
+        width: "auto",
+        transition: "transform .35s cubic-bezier(.2,.7,.2,1), filter .25s ease",
+      }}
     />
   );
 }

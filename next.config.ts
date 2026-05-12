@@ -8,6 +8,12 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "plus.unsplash.com" },
     ],
   },
+  experimental: {
+    serverActions: {
+      // Match the Supabase bucket file size limit (100 MB)
+      bodySizeLimit: "100mb",
+    },
+  },
 };
 
 export default nextConfig;

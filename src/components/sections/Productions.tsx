@@ -92,15 +92,16 @@ export function Productions({
 
       <Reveal delay={2}>
         <div
+          className="prod-header"
           style={{
-            display: "grid",
-            gridTemplateColumns: "auto 1fr auto auto auto",
-            gap: 24,
+            display: "flex",
+            alignItems: "center",
+            gap: 18,
             padding: "14px 20px",
             border: "1px solid rgba(0,0,3,.12)",
             background: "rgba(3,62,125,.06)",
             marginBottom: 1,
-            alignItems: "center",
+            flexWrap: "wrap",
           }}
         >
           <span
@@ -122,9 +123,6 @@ export function Productions({
           >
             HISTORIQUE DES PRODUCTIONS
           </span>
-          <span className="label" style={{ color: "rgba(0,0,3,.55)" }}>TITRE</span>
-          <span className="label" style={{ color: "rgba(0,0,3,.55)" }}>FORMAT</span>
-          <span className="label" style={{ color: "rgba(0,0,3,.55)" }}>ANNÉE</span>
         </div>
       </Reveal>
 
@@ -159,11 +157,12 @@ function ProdRow({
 
   return (
     <div
+      className="prod-row"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
         display: "grid",
-        gridTemplateColumns: "auto 1fr auto auto auto",
+        gridTemplateColumns: "auto 1fr auto",
         gap: 24,
         alignItems: "center",
         padding: "24px 20px",
@@ -174,57 +173,68 @@ function ProdRow({
         position: "relative",
       }}
     >
-      <span className="label" style={{ color: "rgba(0,0,3,.45)", width: 40 }}>
+      <span className="prod-row-idx label" style={{ color: "rgba(0,0,3,.45)", width: 40 }}>
         {String(index + 1).padStart(2, "0")}
       </span>
-      <div>
+      <div className="prod-row-title" style={{ minWidth: 0 }}>
         <div
-          className="oswald"
+          className="oswald prod-row-name"
           style={{
             fontSize: 22,
             fontWeight: 600,
             letterSpacing: ".04em",
             color: "var(--ink)",
+            wordBreak: "break-word",
           }}
         >
           «&nbsp;{p.name}&nbsp;»
         </div>
         <div style={{ marginTop: 6, fontSize: 12.5, color: "rgba(0,0,3,.55)" }}>{meta}</div>
       </div>
-      <span
-        className="label"
+      <div
+        className="prod-row-aside"
         style={{
-          padding: "5px 9px",
-          border: `1px solid ${p.fmt === "TV" ? accent : "rgba(0,0,3,.18)"}`,
-          color: p.fmt === "TV" ? accent : "rgba(0,0,3,.75)",
-          minWidth: 54,
-          textAlign: "center",
+          display: "flex",
+          alignItems: "center",
+          gap: 18,
+          flexShrink: 0,
         }}
       >
-        {p.fmt}
-      </span>
-      <span
-        className="oswald"
-        style={{
-          fontSize: 14,
-          letterSpacing: ".06em",
-          color: NAVY,
-          minWidth: 120,
-          fontVariantNumeric: "tabular-nums",
-          fontWeight: 600,
-        }}
-      >
-        {p.date}
-      </span>
-      <span
-        style={{
-          color: accent,
-          transition: "transform .3s ease",
-          transform: hover ? "translateX(6px)" : "none",
-        }}
-      >
-        <Arrow size={16} />
-      </span>
+        <span
+          className="label"
+          style={{
+            padding: "5px 9px",
+            border: `1px solid ${p.fmt === "TV" ? accent : "rgba(0,0,3,.18)"}`,
+            color: p.fmt === "TV" ? accent : "rgba(0,0,3,.75)",
+            minWidth: 54,
+            textAlign: "center",
+          }}
+        >
+          {p.fmt}
+        </span>
+        <span
+          className="oswald prod-row-date"
+          style={{
+            fontSize: 14,
+            letterSpacing: ".06em",
+            color: NAVY,
+            fontVariantNumeric: "tabular-nums",
+            fontWeight: 600,
+          }}
+        >
+          {p.date}
+        </span>
+        <span
+          className="prod-row-arrow"
+          style={{
+            color: accent,
+            transition: "transform .3s ease",
+            transform: hover ? "translateX(6px)" : "none",
+          }}
+        >
+          <Arrow size={16} />
+        </span>
+      </div>
     </div>
   );
 }

@@ -45,7 +45,7 @@ export function CTA({ accent = "var(--orange)", cms }: { accent?: string; cms?: 
       style={{ position: "relative", background: "var(--ink)", overflow: "hidden" }}
     >
       <div
-        className="display"
+        className="display cta-bignum"
         style={{
           position: "absolute",
           right: -40,
@@ -160,6 +160,7 @@ export function CTA({ accent = "var(--orange)", cms }: { accent?: string; cms?: 
             </div>
 
             <div
+              className="cta-progress"
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(4,1fr)",

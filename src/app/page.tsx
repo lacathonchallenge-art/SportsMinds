@@ -30,13 +30,16 @@ export default async function HomePage() {
   const productions = prodRows.map(prodRowToItem);
   const s = homeCms?.sections ?? {};
 
+  // Home: only show the 4 most recent events (featured first by data-layer sort)
+  const homeEvents = events.slice(0, 4);
+
   return (
     <>
       <Hero cms={s.hero} />
       <Intro cms={s.intro} />
       <Expertises cms={s.expertises} />
       <References clients={clients} />
-      <Events events={events} />
+      <Events events={homeEvents} portfolioHref="/evenements-productions" hideFilters />
       <Productions productions={productions} />
       <Stats cms={s.stats} />
       <CTA cms={s.cta} />
