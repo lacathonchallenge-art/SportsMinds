@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SPORTS MINDS — Sport. Média. Événementiel. Impact.</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --navy:#003f7e;
+    --navy-deep:#002a55;
+    --ink:#000003;
+    --orange:#f0943e;
+    --orange-hot:#ff8a1f;
+    --white:#ffffff;
+    --paper:#f4f1ea;
+    --line:rgba(255,255,255,.12);
+    --line-strong:rgba(255,255,255,.28);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--white);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit}
+  ::selection{background:var(--orange);color:var(--ink)}
+
+  .display{font-family:'Bebas Neue',Impact,sans-serif;font-weight:400;letter-spacing:.005em;line-height:.88}
+  .label{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+  .oswald{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.04em}
+
+  /* Hide scrollbar polish */
+  html{scrollbar-color: rgba(255,255,255,.25) transparent}
+
+  /* Marquee */
+  @keyframes marquee { from{transform:translate3d(0,0,0)} to{transform:translate3d(-50%,0,0)} }
+  @keyframes marquee-rev { from{transform:translate3d(-50%,0,0)} to{transform:translate3d(0,0,0)} }
+  @keyframes scan-x { 0%{transform:translateX(-100%)} 100%{transform:translateX(200%)} }
+  @keyframes flicker { 0%,100%{opacity:.85} 50%{opacity:1} }
+  @keyframes pulse-ring { 0%{box-shadow:0 0 0 0 rgba(240,148,62,.45)} 80%,100%{box-shadow:0 0 0 14px rgba(240,148,62,0)} }
+  @keyframes blink { 50%{opacity:.25} }
+  @keyframes ticker-up { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
+  @keyframes drift { 0%{transform:translate3d(0,0,0)} 50%{transform:translate3d(-12px,-6px,0)} 100%{transform:translate3d(0,0,0)} }
+
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* Section H2 — responsive */
+  .h2-section{font-size:55px;line-height:.95;margin:0}
+  @media (max-width: 1024px){ .h2-section{font-size:45px} }
+  @media (max-width: 640px){ .h2-section{font-size:35px} }
+
+  /* Body text — responsive (does not apply to hero) */
+  .body-text{font-size:16px;line-height:1.55}
+  @media (max-width: 1024px){ .body-text{font-size:15px} }
+  @media (max-width: 640px){ .body-text{font-size:14px} }
+
+  /* ─────────── Responsive ─────────── */
+
+  /* Section horizontal padding (.section-pad is on every <Section/>) */
+  @media (max-width: 1024px){ .section-pad{ padding-left:32px !important; padding-right:32px !important; } }
+  @media (max-width: 640px) { .section-pad{ padding-left:20px !important; padding-right:20px !important; } }
+
+  /* Hero responsive (the only section that does not use .section-pad) */
+  @media (max-width: 1024px){
+    .hero-main{ padding:120px 32px 0 !important; }
+    #home h1{ font-size:96px !important; }
+    .hero-tagline{ font-size:18px !important; letter-spacing:.14em !important; }
+    .hero-stats{ flex-wrap:wrap !important; }
+    .hero-stats > div{ flex: 1 1 calc(50% - 24px) !important; min-width:140px; margin-bottom:20px; }
+    .hero-stats > div:nth-child(2){ border-right:none !important; }
+  }
+  @media (max-width: 640px){
+    .hero-main{ padding:96px 20px 0 !important; }
+    #home h1{ font-size:56px !important; line-height:.9 !important; }
+    .hero-tagline{ font-size:14px !important; letter-spacing:.10em !important; }
+    .hero-stats{ margin-top:48px !important; }
+    .hero-stats > div .display{ font-size:30px !important; }
+  }
+
+  /* Collapse all multi-column grids of expertises/events/stats on smaller screens */
+  @media (max-width: 1024px){
+    /* repeat(3,1fr) → 2 columns */
+    [style*="repeat(3, 1fr)"], [style*="repeat(3,1fr)"]{ grid-template-columns: repeat(2, 1fr) !important; }
+    /* references logo wall — 7 cols → 4 */
+    [style*="repeat(7, 1fr)"], [style*="repeat(7,1fr)"]{ grid-template-columns: repeat(4, 1fr) !important; }
+    /* stats 4-col */
+    [style*="repeat(4, 1fr)"], [style*="repeat(4,1fr)"]{ grid-template-columns: repeat(2, 1fr) !important; }
+    /* Two-column generic layouts: .7fr 1.3fr / 1fr 1fr / 1.4fr .9fr */
+    [style*=".7fr 1.3fr"], [style*="1fr 1fr"], [style*="1.4fr .9fr"], [style*="1.3fr 1fr"]{
+      grid-template-columns: 1fr !important;
+      gap: 32px !important;
+    }
+  }
+  @media (max-width: 640px){
+    [style*="repeat(3, 1fr)"], [style*="repeat(3,1fr)"]{ grid-template-columns: 1fr !important; }
+    [style*="repeat(7, 1fr)"], [style*="repeat(7,1fr)"]{ grid-template-columns: repeat(3, 1fr) !important; }
+    [style*="repeat(4, 1fr)"], [style*="repeat(4,1fr)"]{ grid-template-columns: 1fr !important; }
+  }
+
+  /* Nav: switch to hamburger on tablet/mobile */
+  .nav-burger{ display:none !important; }
+  @media (max-width: 1024px){
+    .nav-desktop{ display:none !important; }
+    .nav-burger{ display:inline-flex !important; align-items:center; justify-content:center; }
+    .nav-cta{ padding:10px 14px !important; font-size:11px !important; }
+  }
+  @media (max-width: 640px){
+    nav{ padding:14px 20px !important; }
+    nav img{ height:32px !important; }
+    .nav-cta{ display:none !important; }
+  }
+
+  /* Big section H2 line-height fix when wrapping */
+  .h2-section{ word-break:break-word; }
+
+  /* Prevent any horizontal overflow on small screens */
+  @media (max-width: 1024px){
+    body{ overflow-x:hidden; }
+    [style*="maxWidth:1100"], [style*="max-width: 1100"]{ max-width:100% !important; }
+    [style*="maxWidth:1000"], [style*="max-width: 1000"]{ max-width:100% !important; }
+    [style*="maxWidth:900"],  [style*="max-width: 900"] { max-width:100% !important; }
+  }
+
+  /* Slider counter on Hero: tuck into top-right on tablet/phone */
+  @media (max-width: 1024px){
+    #home > div[style*="position:absolute"][style*="right: 56px"][style*="top: 160px"]{
+      right:20px !important; top:100px !important;
+    }
+    #home > div[style*="position:absolute"][style*="right: 56px"][style*="bottom: 96px"]{
+      right:20px !important; bottom:60px !important;
+    }
+  }
+
+  /* Cards: tighten padding on small */
+  @media (max-width: 640px){
+    /* Expertise cards padding default 32, tighten */
+    [style*="min-height: 360"]{ min-height:280px !important; }
+  }
+  .reveal-delay-1{transition-delay:.08s}
+  .reveal-delay-2{transition-delay:.16s}
+  .reveal-delay-3{transition-delay:.24s}
+  .reveal-delay-4{transition-delay:.32s}
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="components/atoms.jsx"></script>
+  <script type="text/babel" src="components/nav.jsx"></script>
+  <script type="text/babel" src="components/hero.jsx"></script>
+  <script type="text/babel" src="components/intro.jsx"></script>
+  <script type="text/babel" src="components/expertises.jsx"></script>
+  <script type="text/babel" src="components/references.jsx"></script>
+  <script type="text/babel" src="components/events.jsx"></script>
+  <script type="text/babel" src="components/productions.jsx"></script>
+  <script type="text/babel" src="components/stats.jsx"></script>
+  <script type="text/babel" src="components/cta.jsx"></script>
+  <script type="text/babel" src="components/footer.jsx"></script>
+  <script type="text/babel" src="app.jsx"></script>
+</body>
+</html>

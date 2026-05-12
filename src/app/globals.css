@@ -1,0 +1,234 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ──────────────────────────────────────────────────────────
+   SPORTS MINDS — Design tokens (1:1 port from legacy/index.html)
+   ────────────────────────────────────────────────────────── */
+
+:root {
+  --navy:         #003f7e;
+  --navy-deep:    #002a55;
+  --ink:          #000003;
+  --orange:       #f0943e;
+  --orange-hot:   #ff8a1f;
+  --white:        #ffffff;
+  --paper:        #f4f1ea;
+  --line:         rgba(255, 255, 255, 0.12);
+  --line-strong:  rgba(255, 255, 255, 0.28);
+
+  /* Tailwind/shadcn-compatible mapping */
+  --background: var(--ink);
+  --foreground: var(--white);
+}
+
+@theme inline {
+  --color-navy:        var(--navy);
+  --color-navy-deep:   var(--navy-deep);
+  --color-ink:         var(--ink);
+  --color-orange:      var(--orange);
+  --color-orange-hot:  var(--orange-hot);
+  --color-paper:       var(--paper);
+  --color-background:  var(--background);
+  --color-foreground:  var(--foreground);
+
+  /* Admin-side aliases (kept for the Sports Minds CRM components) */
+  --color-brand-blue:         var(--navy);
+  --color-brand-blue-hover:   var(--navy-deep);
+  --color-brand-deep:         var(--ink);
+  --color-brand-orange:       var(--orange);
+  --color-brand-orange-hover: var(--orange-hot);
+  --color-brand-white:        var(--white);
+  --color-brand-black:        #000000;
+
+  --font-sans:    "Inter", system-ui, sans-serif;
+  --font-display: "Bebas Neue", Impact, sans-serif;
+  --font-oswald:  "Oswald", sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--ink);
+  color: var(--white);
+  font-family: "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+body { overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+::selection { background: var(--orange); color: var(--ink); }
+html { scrollbar-color: rgba(255, 255, 255, 0.25) transparent; }
+
+/* Typography helpers (kept as global class names so the ported components
+   continue to work verbatim) */
+.display {
+  font-family: "Bebas Neue", Impact, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 0.88;
+}
+.label {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.oswald {
+  font-family: "Oswald", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ─── Animations ─── */
+@keyframes marquee     { from { transform: translate3d(0, 0, 0) }     to { transform: translate3d(-50%, 0, 0) } }
+@keyframes marquee-rev { from { transform: translate3d(-50%, 0, 0) } to { transform: translate3d(0, 0, 0) } }
+@keyframes scan-x      { 0%   { transform: translateX(-100%) }       100% { transform: translateX(200%) } }
+@keyframes flicker     { 0%, 100% { opacity: 0.85 }                  50% { opacity: 1 } }
+@keyframes pulse-ring  { 0%   { box-shadow: 0 0 0 0 rgba(240,148,62,0.45) } 80%, 100% { box-shadow: 0 0 0 14px rgba(240,148,62,0) } }
+@keyframes blink       { 50%  { opacity: 0.25 } }
+@keyframes ticker-up   { from { transform: translateY(100%); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+@keyframes drift       { 0%   { transform: translate3d(0, 0, 0) } 50% { transform: translate3d(-12px, -6px, 0) } 100% { transform: translate3d(0, 0, 0) } }
+
+/* ─── Reveal-on-scroll ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity .9s cubic-bezier(.2, .7, .2, 1),
+    transform .9s cubic-bezier(.2, .7, .2, 1);
+}
+.reveal.in { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: .08s; }
+.reveal-delay-2 { transition-delay: .16s; }
+.reveal-delay-3 { transition-delay: .24s; }
+.reveal-delay-4 { transition-delay: .32s; }
+
+/* ─── Responsive section H2 ─── */
+.h2-section {
+  font-size: 55px;
+  line-height: .95;
+  margin: 0;
+  word-break: break-word;
+}
+@media (max-width: 1024px) { .h2-section { font-size: 45px } }
+@media (max-width: 640px)  { .h2-section { font-size: 35px } }
+
+/* ─── Responsive body text (does not apply to hero) ─── */
+.body-text { font-size: 16px; line-height: 1.55 }
+@media (max-width: 1024px) { .body-text { font-size: 15px } }
+@media (max-width: 640px)  { .body-text { font-size: 14px } }
+
+/* ─── Section horizontal padding ─── */
+@media (max-width: 1024px) { .section-pad { padding-left: 32px !important; padding-right: 32px !important } }
+@media (max-width: 640px)  { .section-pad { padding-left: 20px !important; padding-right: 20px !important } }
+
+/* ─── Section content container: 90% width, max 1300px, centered ─── */
+.section-content {
+  width: 90%;
+  max-width: 1300px;
+  margin-inline: auto;
+  position: relative;
+}
+@media (max-width: 640px) {
+  /* On phone the 90% becomes too cramped given padding is already 20px */
+  .section-content { width: 100% }
+}
+
+/* ─── Hero responsive ─── */
+@media (max-width: 1024px) {
+  .hero-main { padding: 120px 32px 0 !important }
+  .hero-main-about { padding: 120px 32px 50px !important }
+  #home h1 { font-size: 96px !important }
+  .hero-tagline { font-size: 18px !important; letter-spacing: .14em !important }
+  .hero-stats { flex-wrap: wrap !important }
+  .hero-stats > div { flex: 1 1 calc(50% - 24px) !important; min-width: 140px; margin-bottom: 20px }
+  .hero-stats > div:nth-child(2) { border-right: none !important }
+}
+@media (max-width: 640px) {
+  .hero-main { padding: 96px 20px 0 !important }
+  .hero-main-about { padding: 96px 20px 50px !important }
+  #home h1 { font-size: 56px !important; line-height: .9 !important }
+  .hero-tagline { font-size: 14px !important; letter-spacing: .10em !important }
+  .hero-stats { margin-top: 48px !important }
+  .hero-stats > div .display { font-size: 30px !important }
+}
+
+/* ─── Grid collapses on smaller screens ─── */
+@media (max-width: 1024px) {
+  [style*="repeat(3, 1fr)"], [style*="repeat(3,1fr)"] { grid-template-columns: repeat(2, 1fr) !important }
+  [style*="repeat(7, 1fr)"], [style*="repeat(7,1fr)"] { grid-template-columns: repeat(4, 1fr) !important }
+  [style*="repeat(4, 1fr)"], [style*="repeat(4,1fr)"] { grid-template-columns: repeat(2, 1fr) !important }
+  [style*=".7fr 1.3fr"], [style*="1fr 1fr"], [style*="1.4fr .9fr"], [style*="1.3fr 1fr"],
+  [style*="1.1fr 0.9fr"], [style*="1.1fr .9fr"],
+  [style*="0.85fr 1.15fr"], [style*=".85fr 1.15fr"],
+  [style*="1.2fr 1fr"], [style*="1.15fr"],
+  [style*="1fr 1.1fr"],
+  [style*="1.6fr repeat(4"], [style*="1.6fr repeat(4,1fr)"] {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+}
+@media (max-width: 640px) {
+  [style*="repeat(3, 1fr)"], [style*="repeat(3,1fr)"] { grid-template-columns: 1fr !important }
+  [style*="repeat(7, 1fr)"], [style*="repeat(7,1fr)"] { grid-template-columns: repeat(3, 1fr) !important }
+  [style*="repeat(4, 1fr)"], [style*="repeat(4,1fr)"] { grid-template-columns: 1fr !important }
+  [style*="repeat(2, 1fr)"], [style*="repeat(2,1fr)"] { grid-template-columns: 1fr !important }
+}
+
+/* ─── Nav: hamburger swap ─── */
+.nav-burger { display: none !important }
+@media (max-width: 1180px) {
+  .nav-desktop { display: none !important }
+  .nav-burger { display: inline-flex !important; align-items: center; justify-content: center }
+  .nav-cta { padding: 10px 14px !important; font-size: 11px !important }
+}
+@media (max-width: 768px) {
+  nav { padding: 14px 24px !important }
+  nav img { height: 46px !important }
+  .nav-cta { padding: 9px 12px !important; font-size: 10px !important }
+}
+@media (max-width: 640px) {
+  nav { padding: 12px 18px !important }
+  nav img { height: 40px !important }
+  .nav-cta { display: none !important }
+}
+/* Overlay menu items scale down on small screens */
+@media (max-width: 768px) {
+  .nav-overlay { padding: 80px 20px 24px !important }
+  .nav-overlay ul a { font-size: 18px !important; padding: 16px 4px !important; gap: 12px !important }
+}
+@media (max-width: 380px) {
+  .nav-overlay ul a { font-size: 15px !important; padding: 14px 4px !important }
+}
+
+/* ─── Overflow guard on small screens ─── */
+@media (max-width: 1024px) {
+  body { overflow-x: hidden }
+  [style*="maxWidth:1100"], [style*="max-width: 1100"] { max-width: 100% !important }
+  [style*="maxWidth:1000"], [style*="max-width: 1000"] { max-width: 100% !important }
+  [style*="maxWidth:900"],  [style*="max-width: 900"]  { max-width: 100% !important }
+}
+
+/* ─── Cards: tighten on small ─── */
+@media (max-width: 640px) {
+  [style*="min-height: 360"] { min-height: 280px !important }
+}
+
+/* ─── About — Achievements cards responsive ─── */
+@media (max-width: 768px) {
+  .ach-card-title { font-size: 26px !important }
+  .ach-card-body {
+    flex-direction: column !important;
+    gap: 14px !important;
+    padding: 18px 18px 20px !important;
+  }
+  .ach-card-body > div[style*="min-width: 110"],
+  .ach-card-body > div[style*="minWidth: 110"] { min-width: 0 !important }
+}
+@media (max-width: 640px) {
+  .ach-card-title { font-size: 22px !important }
+}
