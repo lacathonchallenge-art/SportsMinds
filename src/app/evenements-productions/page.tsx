@@ -10,10 +10,44 @@ import { Productions } from "@/components/sections/Productions";
 
 export const dynamic = "force-dynamic";
 
+const EVENTS_OG_IMAGE =
+  "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1200&h=630&q=80";
+
 export const metadata: Metadata = {
-  title: "Événements & Productions · SPORTS MINDS",
+  title: "Portfolio — Événements & Productions sportives",
   description:
-    "L'ensemble de nos projets sportifs, médiatiques et événementiels — du brief stratégique à la captation live. Tous nos cases triés par catégorie.",
+    "Portfolio complet de nos événements sportifs et productions médias au Maroc : Marathon des Sables, Coupe Danone, Grand Prix Hassan II, Tournée des Plages. +320 projets livrés.",
+  keywords: [
+    "portfolio événements sportifs Maroc",
+    "productions médias sport",
+    "Marathon des Sables",
+    "Coupe Danone Maroc",
+    "Grand Prix Hassan II",
+    "événementiel sportif Casablanca",
+    "captation TV sport",
+  ],
+  alternates: { canonical: "/evenements-productions" },
+  openGraph: {
+    title: "Portfolio — Événements & Productions sportives · SPORTS MINDS",
+    description:
+      "Tous nos cases sportifs, médiatiques et événementiels au Maroc — triés par catégorie.",
+    url: "/evenements-productions",
+    images: [
+      {
+        url: EVENTS_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Portfolio SPORTS MINDS — Événements & Productions",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Portfolio — Événements & Productions sportives · SPORTS MINDS",
+    description:
+      "Tous nos cases sportifs au Maroc — Marathon des Sables, Coupe Danone, Grand Prix Hassan II…",
+    images: [EVENTS_OG_IMAGE],
+  },
 };
 
 export default async function EventsProductionsPage() {
