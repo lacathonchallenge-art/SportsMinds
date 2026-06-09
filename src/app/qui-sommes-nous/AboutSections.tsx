@@ -1876,8 +1876,8 @@ function FinalCTA({ cms }: { cms?: SectionCms }) {
                   gap: 14,
                 }}
               >
-                <ContactLine label="Email" value="hello@sportsminds.ma" href="mailto:hello@sportsminds.ma" />
-                <ContactLine label="Téléphone" value="+212 522 00 00 00" href="tel:+212522000000" />
+                <ContactLine label="Email" value="monaciri@hotmail.fr" href="mailto:monaciri@hotmail.fr" />
+                <ContactLine label="Téléphone" value="+212 661-173444" href="tel:+212661173444" />
                 <ContactLine label="HQ" value="23, Rue de l'Atlas · Maârif · Casablanca" />
               </ul>
 

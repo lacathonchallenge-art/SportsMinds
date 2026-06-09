@@ -123,8 +123,19 @@ export function CTA({ accent = "var(--orange)", cms }: { accent?: string; cms?: 
                 JOIGNEZ-NOUS
               </div>
               <div className="oswald" style={{ fontSize: 15, fontWeight: 500, lineHeight: 1.5 }}>
-                +212 522 00 00 00<br />
-                <span style={{ color: accent }}>hello@sportsminds.ma</span>
+                <a
+                  href="tel:+212661173444"
+                  style={{ color: "inherit", textDecoration: "none" }}
+                >
+                  +212 661-173444
+                </a>
+                <br />
+                <a
+                  href="mailto:monaciri@hotmail.fr"
+                  style={{ color: accent, textDecoration: "none" }}
+                >
+                  monaciri@hotmail.fr
+                </a>
               </div>
             </div>
           </Reveal>

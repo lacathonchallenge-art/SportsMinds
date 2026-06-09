@@ -247,15 +247,15 @@ export function Footer({ accent = "var(--orange)" }: { accent?: string }) {
               <li>
                 <FooterContact
                   label="EMAIL"
-                  value="monaciri@sportsminds.ma"
-                  href="mailto:monaciri@sportsminds.ma"
+                  value="monaciri@hotmail.fr"
+                  href="mailto:monaciri@hotmail.fr"
                   accent={accent}
                 />
               </li>
               <li>
                 <FooterContact
                   label="TEL."
-                  value="+212 6 61 17 34 44"
+                  value="+212 661-173444"
                   href="tel:+212661173444"
                   accent={accent}
                 />

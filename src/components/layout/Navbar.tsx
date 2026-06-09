@@ -387,7 +387,7 @@ export function Navbar({ accent = "var(--orange)" }: { accent?: string }) {
                 EMAIL
               </div>
               <a
-                href="mailto:monaciri@sportsminds.ma"
+                href="mailto:monaciri@hotmail.fr"
                 className="oswald"
                 style={{
                   color: "var(--white)",
@@ -397,7 +397,7 @@ export function Navbar({ accent = "var(--orange)" }: { accent?: string }) {
                   display: "block",
                 }}
               >
-                monaciri@sportsminds.ma
+                monaciri@hotmail.fr
               </a>
             </div>
             <div style={{ minWidth: 0 }}>
@@ -417,7 +417,7 @@ export function Navbar({ accent = "var(--orange)" }: { accent?: string }) {
                   whiteSpace: "nowrap",
                 }}
               >
-                +212 6 61 17 34 44
+                +212 661-173444
               </a>
             </div>
           </div>

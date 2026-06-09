@@ -72,7 +72,7 @@ export default async function HomePage() {
     contactPoint: {
       "@type": "ContactPoint",
       telephone: "+212661173444",
-      email: "monaciri@sportsminds.ma",
+      email: "monaciri@hotmail.fr",
       contactType: "customer service",
       areaServed: "MA",
       availableLanguage: ["French", "English", "Arabic"],
