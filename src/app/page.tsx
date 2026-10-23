@@ -24,12 +24,12 @@ const HOME_OG_IMAGE =
 export const metadata: Metadata = {
   title: "SPORTS MINDS — Agence de communication sportive · Maroc",
   description:
-    "SPORTS MINDS — Agence conseil spécialisée en communication sportive, événementiel et production média au Maroc. 18 ans d'expérience, +320 événements livrés, 80M+ spectateurs touchés.",
+    "Agence conseil en communication sportive, événementiel et production média au Maroc. 18 ans d'expérience, +320 événements livrés.",
   alternates: { canonical: "/" },
   openGraph: {
     title: "SPORTS MINDS — Agence de communication sportive · Maroc",
     description:
-      "Agence conseil spécialisée en communication sportive, événementiel et production média au Maroc.",
+      "Agence conseil en communication sportive, événementiel et production média au Maroc. 18 ans d'expérience, +320 événements livrés.",
     url: "/",
     images: [{ url: HOME_OG_IMAGE, width: 1200, height: 630, alt: "SPORTS MINDS — Sport, Média, Événementiel" }],
   },

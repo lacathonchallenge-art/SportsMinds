@@ -8,6 +8,7 @@ import {
   type CSSProperties,
 } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Arrow } from "@/components/ui/Atoms";
 
@@ -482,10 +483,12 @@ function Bars({ open }: { open: boolean }) {
 
 function Logomark() {
   return (
-    /* eslint-disable-next-line @next/next/no-img-element */
-    <img
+    <Image
       src="/sportsmindslogo.jpeg"
-      alt="Sports Minds"
+      alt="SPORTS MINDS — Agence de communication sportive au Maroc"
+      width={168}
+      height={56}
+      priority
       className="nav-logo-img"
       style={{
         display: "block",

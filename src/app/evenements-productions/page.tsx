@@ -16,7 +16,7 @@ const EVENTS_OG_IMAGE =
 export const metadata: Metadata = {
   title: "Portfolio — Événements & Productions sportives",
   description:
-    "Portfolio complet de nos événements sportifs et productions médias au Maroc : Marathon des Sables, Coupe Danone, Grand Prix Hassan II, Tournée des Plages. +320 projets livrés.",
+    "Portfolio événements sportifs et productions médias au Maroc : Marathon des Sables, Coupe Danone, Grand Prix Hassan II, Tournée des Plages.",
   keywords: [
     "portfolio événements sportifs Maroc",
     "productions médias sport",

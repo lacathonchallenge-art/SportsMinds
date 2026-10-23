@@ -7,6 +7,7 @@ import {
   type FormEvent,
   type MouseEvent,
 } from "react";
+import Image from "next/image";
 import { Arrow, LiveDot } from "@/components/ui/Atoms";
 
 const FOOTER_NAVY = "#033e7d";
@@ -503,9 +504,14 @@ function FooterContact({
 }
 
 function Logomark(): React.ReactElement {
-  const style: CSSProperties = { display: "block", height: 40, width: "auto" };
   return (
-    /* eslint-disable-next-line @next/next/no-img-element */
-    <img src="/sportsmindslogo.jpeg" alt="Sports Minds" style={style} />
+    <Image
+      src="/sportsmindslogo.jpeg"
+      alt="SPORTS MINDS — Agence de communication sportive au Maroc"
+      width={120}
+      height={40}
+      style={{ display: "block", height: 40, width: "auto" }}
+      priority={false}
+    />
   );
 }
